@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+import { profile } from '../data/profile';
+interface Props { title?: string; description?: string; }
+const { title, description = profile.description } = Astro.props;
+const pageTitle = title ? `${title} — 周国翔 / Sky` : '周国翔 / Sky — AI 产品经理与 UX 实践者';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#315342" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/assets/social-card.png', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <header class="site-header wrap">
+      <a href="/" class="brand" aria-label="周国翔 Sky，返回首页">周国翔 <span>/ Sky</span></a>
+      <nav aria-label="主导航">
+        <a href="/#work">作品</a>
+        <a href="/about/" aria-current={Astro.url.pathname === '/about/' ? 'page' : undefined}>关于我</a>
+        <a href="/#contact">联系 <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-footer wrap">
+      <a class="footer-name" href="/">周国翔 / Sky</a>
+      <span>持续实践，认真创造。</span>
+      <a href="/archives/">设计作品归档 <span aria-hidden="true">↗</span></a>
+    </footer>
+  </body>
+</html>

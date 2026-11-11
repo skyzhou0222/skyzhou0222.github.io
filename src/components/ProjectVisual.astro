@@ -1,0 +1,24 @@
+---
+const { type, large = false } = Astro.props;
+---
+<div class:list={['project-visual', type === 'wec-bot' ? 'visual-wec' : 'visual-wesion', { large }]}>
+  {type === 'wec-bot' ? (
+    <div class="wec-map" role="img" aria-label="WeC Bot 流程示意：业务问题经知识、分析与流程能力，由人判断跟进，再沉淀反馈。">
+      <div class="map-heading"><span class="mini-mark">W</span><span>WeC Bot <small>知识与服务协同</small></span><span class="map-dots" aria-hidden="true">•••</span></div>
+      <div class="flow-input"><span class="flow-dot"></span> 一个业务问题</div>
+      <div class="branch-line" aria-hidden="true"></div>
+      <div class="flow-columns"><div><b>知识问答</b><span>限定范围 · 回答有据</span></div><div><b>论坛分析</b><span>任务拆分 · 结构提取</span></div><div><b>服务工单</b><span>角色分工 · 流程跟进</span></div></div>
+      <div class="flow-output">人工判断与跟进 <span aria-hidden="true">→</span> 反馈与知识沉淀</div>
+    </div>
+  ) : (
+    <div class="wesion-map" role="img" aria-label="WESION 流程示意：分散业务来源经过口径整理，形成分析视图，并可追溯原始依据。">
+      <div class="source-stack"><span>Excel</span><span>Microsoft Lists</span><span>业务记录</span></div>
+      <span class="flow-arrow" aria-hidden="true">→</span>
+      <div class="platform-node"><span class="platform-icon" aria-hidden="true">▤</span><b>WESION AI</b><small>统一口径 · 组织信息</small></div>
+      <span class="flow-arrow" aria-hidden="true">→</span>
+      <div class="output-stack"><b>看见业务</b><span>筛选 · 下钻</span><span>回到原始依据</span></div>
+      <div class="trace-line">可追溯，才能判断。</div>
+    </div>
+  )}
+  <span class="visual-caption">流程示意 · 非产品截图</span>
+</div>
