@@ -25,12 +25,16 @@ const summaries = {
   },
 };
 export function getStaticPaths() {
-  return ['ce-shi','b-duan-hou-tai-she-ji-gui-fan'].map(slug => ({ params: { legacy: slug } }));
+  return entries.map(entry => ({ params: { legacy: entry.slug } }));
 }
 const slug = Astro.params.legacy as keyof typeof summaries;
-const detail = summaries[slug];
+const selected = summaries[slug];
 const entry = entries.find(p => p.slug === slug)!;
-const groups = images[slug];
+const detail = selected || {title:entry.title,label:'DESIGN ARCHIVE / 历史作品',summary:'保留原作品说明与设计素材。',points:[]};
+const groups = images[slug as keyof typeof images];
+const sorted = [...entries].sort((a,b)=>b.published.localeCompare(a.published));
+const index = sorted.findIndex(e=>e.slug===slug);
+const previous=sorted[index-1]; const next=sorted[index+1];
 ---
 <Base title={detail.title} description={detail.summary}>
   <div class="wrap">
@@ -39,10 +43,10 @@ const groups = images[slug];
       <div class="legacy-points">{detail.points.map(([title,text]) => <div><h2>{title}</h2><p>{text}</p></div>)}</div>
     </header>
     <section class="legacy-reading" aria-label="原设计作品图集"><p class="eyebrow">ORIGINAL WORK / 设计作品</p>
-      {entry.originalText && <details class="legacy-original"><summary>查看原作品说明</summary><p>{entry.originalText}</p></details>}
-      {groups.map((group, i) => <figure class="legacy-image-group">{group.slices.map((slice,n) => <img src={slice.src} width={slice.width} height={slice.height} loading="lazy" decoding="async" alt={`${detail.title}，原作品第 ${i+1} 张，第 ${n+1} 部分`} />)}<figcaption><span>原设计作品 · {String(i+1).padStart(2,'0')}</span><a href={group.original} target="_blank" rel="noopener">查看原图 ↗</a></figcaption></figure>)}
+      {entry.blocks.map(block => block.type === 'text' ? <p class="legacy-source-text">{block.text}</p> : <figure class="legacy-image-group">{groups[block.index!].slices.map((slice,n) => <img src={slice.src} width={slice.width} height={slice.height} loading="lazy" decoding="async" alt={`${detail.title}，原作品第 ${block.index!+1} 张，第 ${n+1} 部分`} />)}<figcaption><span>原设计作品 · {String(block.index!+1).padStart(2,'0')}</span><a href={groups[block.index!].original} target="_blank" rel="noopener">查看原图 ↗</a></figcaption></figure>)}
       <p class="source-date">保留原设计资料，当前文字不新增历史业务效果或量化成果。</p>
     </section>
+    <nav class="legacy-pagination" aria-label="作品翻页">{previous ? <a href={`/${previous.slug}/`}>← 上一篇：{previous.title}</a> : <a href="/archives/">← 返回全部作品</a>}{next ? <a href={`/${next.slug}/`}>下一篇：{next.title} →</a> : <a href="/archives/">返回全部作品 →</a>}</nav>
     <a class="next-case" href="/#work"><div><p class="eyebrow">CONTINUE EXPLORING</p><h2>从设计积累，到产品实践。</h2><p>查看近期的 WeC Bot 与 WESION AI 中台案例。</p></div><span aria-hidden="true">↗</span></a>
   </div>
 </Base>

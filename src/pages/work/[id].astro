@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ProjectVisual from '../../components/ProjectVisual.astro';
+import CaseTabs from '../../components/CaseTabs.astro';
 export async function getStaticPaths() {
   const all = (await getCollection('projects')).sort((a,b) => a.data.order - b.data.order);
   return all.map((project, i) => ({ params: { id: project.id }, props: { project, next: all[(i + 1) % all.length] } }));
@@ -21,7 +22,7 @@ const { Content, headings } = await render(project);
     <ProjectVisual type={project.id} large />
     <div class="case-body">
       <aside class="case-nav"><nav aria-label="案例章节"><p class="eyebrow">IN THIS CASE</p>{headings.filter(h => h.depth === 2).map((h,i) => <a href={`#${h.slug}`}><span>{String(i+1).padStart(2,'0')}</span>{h.text}</a>)}</nav></aside>
-      <article class="prose"><Content /></article>
+      <article class="prose">{project.id === 'wesion-ai' ? <CaseTabs><Content /></CaseTabs> : <Content />}</article>
     </div>
     <a class="next-case" href={`/work/${next.id}/`}><div><p class="eyebrow">NEXT CASE / 下一篇案例</p><h2>{next.data.title}</h2><p>{next.data.subtitle}</p></div><span aria-hidden="true">↗</span></a>
   </div>

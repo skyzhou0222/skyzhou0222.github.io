@@ -13,6 +13,45 @@
       "/post-images/1587531072549.jpg",
       "/post-images/1587531077284.jpg"
     ],
+    "cover": "/assets/legacy/b-duan-hou-tai-she-ji-gui-fan-cover.webp",
+    "blocks": [
+      {
+        "type": "text",
+        "text": "长春新区智慧城市运行指挥中后台的统一设计规范\n难点：原长春新区的各个智慧城市后台为各地分部门独立开发设计，需要将原本的10余个后台内容框架组件进行了梳理拆解，低成本的进行统一改版，整合统一产品设计语言。后也将本规范应用于深圳龙华政府数字账户后台开发。规范有对Ant Design的借鉴"
+      },
+      {
+        "type": "image",
+        "index": 0
+      },
+      {
+        "type": "image",
+        "index": 1
+      },
+      {
+        "type": "image",
+        "index": 2
+      },
+      {
+        "type": "image",
+        "index": 3
+      },
+      {
+        "type": "image",
+        "index": 4
+      },
+      {
+        "type": "image",
+        "index": 5
+      },
+      {
+        "type": "image",
+        "index": 6
+      },
+      {
+        "type": "image",
+        "index": 7
+      }
+    ],
     "originalText": "长春新区智慧城市运行指挥中后台的统一设计规范\n难点：原长春新区的各个智慧城市后台为各地分部门独立开发设计，需要将原本的10余个后台内容框架组件进行了梳理拆解，低成本的进行统一改版，整合统一产品设计语言。后也将本规范应用于深圳龙华政府数字账户后台开发。规范有对Ant Design的借鉴"
   },
   {
@@ -25,6 +64,25 @@
       "/post-images/1708398378772.jpg",
       "/post-images/1708398383345.jpg"
     ],
+    "cover": "/assets/legacy/ce-shi-cover.webp",
+    "blocks": [
+      {
+        "type": "image",
+        "index": 0
+      },
+      {
+        "type": "image",
+        "index": 1
+      },
+      {
+        "type": "image",
+        "index": 2
+      },
+      {
+        "type": "image",
+        "index": 3
+      }
+    ],
     "originalText": ""
   },
   {
@@ -35,7 +93,26 @@
       "/post-images/1587534518519.gif",
       "/post-images/1587537930206.png"
     ],
-    "originalText": "插画修改的动效\n\n18年低 给自己做的小 logo。"
+    "cover": "/assets/legacy/cha-hua-xiu-gai-de-de-xiao-dong-xiao-cover.webp",
+    "blocks": [
+      {
+        "type": "text",
+        "text": "插画修改的动效"
+      },
+      {
+        "type": "image",
+        "index": 0
+      },
+      {
+        "type": "text",
+        "text": "18年低 给自己做的小 logo。"
+      },
+      {
+        "type": "image",
+        "index": 1
+      }
+    ],
+    "originalText": "插画修改的动效\n18年低 给自己做的小 logo。"
   },
   {
     "slug": "ding-ding-redesign",
@@ -61,6 +138,81 @@
       "/post-images/1587528392879.jpg",
       "/post-images/1587528398113.jpg"
     ],
+    "cover": "/assets/legacy/ding-ding-redesign-cover.webp",
+    "blocks": [
+      {
+        "type": "image",
+        "index": 0
+      },
+      {
+        "type": "image",
+        "index": 1
+      },
+      {
+        "type": "image",
+        "index": 2
+      },
+      {
+        "type": "image",
+        "index": 3
+      },
+      {
+        "type": "image",
+        "index": 4
+      },
+      {
+        "type": "image",
+        "index": 5
+      },
+      {
+        "type": "image",
+        "index": 6
+      },
+      {
+        "type": "image",
+        "index": 7
+      },
+      {
+        "type": "image",
+        "index": 8
+      },
+      {
+        "type": "image",
+        "index": 9
+      },
+      {
+        "type": "image",
+        "index": 10
+      },
+      {
+        "type": "image",
+        "index": 11
+      },
+      {
+        "type": "image",
+        "index": 12
+      },
+      {
+        "type": "image",
+        "index": 13
+      },
+      {
+        "type": "image",
+        "index": 14
+      },
+      {
+        "type": "image",
+        "index": 15
+      },
+      {
+        "type": "image",
+        "index": 16
+      },
+      {
+        "type": "image",
+        "index": 17
+      }
+    ],
     "originalText": ""
   },
   {
@@ -69,6 +221,13 @@
     "published": "2018-02-15",
     "images": [
       "/post-images/1587533735357.jpg"
+    ],
+    "cover": "/assets/legacy/pp-shi-pin-re-design-cover.webp",
+    "blocks": [
+      {
+        "type": "image",
+        "index": 0
+      }
     ],
     "originalText": ""
   },
@@ -79,6 +238,13 @@
     "images": [
       "/post-images/1587532993957.jpg"
     ],
+    "cover": "/assets/legacy/shu-ma-zu-ren-dian-shang-xiao-zu-pei-qi-cover.webp",
+    "blocks": [
+      {
+        "type": "image",
+        "index": 0
+      }
+    ],
     "originalText": ""
   },
   {
@@ -87,6 +253,13 @@
     "published": "2018-04-11",
     "images": [
       "/post-images/1587532911492.jpg"
+    ],
+    "cover": "/assets/legacy/wang-ka-ye-wu-guan-li-hou-tai-fan-yu-cover.webp",
+    "blocks": [
+      {
+        "type": "image",
+        "index": 0
+      }
     ],
     "originalText": ""
   },
@@ -97,6 +270,13 @@
     "images": [
       "/post-images/1587533540026.jpg"
     ],
+    "cover": "/assets/legacy/wang-ka-yi-dong-duan-fan-yu-cover.webp",
+    "blocks": [
+      {
+        "type": "image",
+        "index": 0
+      }
+    ],
     "originalText": ""
   },
   {
@@ -106,6 +286,59 @@
     "images": [
       "/post-images/1587533946674.jpg"
     ],
+    "cover": "/assets/legacy/xiao-ma-os-che-zai-xi-tong-cover.webp",
+    "blocks": [
+      {
+        "type": "image",
+        "index": 0
+      }
+    ],
+    "originalText": ""
+  },
+  {
+    "slug": "you-zan-wang-dian-yu-yue-xi-tong",
+    "title": "有赞 网店预约系统",
+    "published": "2024-02-28",
+    "images": [
+      "/post-images/1709114638030.jpg",
+      "/post-images/1709114649669.jpg",
+      "/post-images/1709114655565.jpg",
+      "/post-images/1709114661504.jpg",
+      "/post-images/1709114670823.jpg",
+      "/post-images/1709114676084.jpg",
+      "/post-images/1709114857461.jpg"
+    ],
+    "cover": "/assets/legacy/you-zan-wang-dian-yu-yue-xi-tong-cover.webp",
+    "blocks": [
+      {
+        "type": "image",
+        "index": 0
+      },
+      {
+        "type": "image",
+        "index": 1
+      },
+      {
+        "type": "image",
+        "index": 2
+      },
+      {
+        "type": "image",
+        "index": 3
+      },
+      {
+        "type": "image",
+        "index": 4
+      },
+      {
+        "type": "image",
+        "index": 5
+      },
+      {
+        "type": "image",
+        "index": 6
+      }
+    ],
     "originalText": ""
   },
   {
@@ -114,6 +347,13 @@
     "published": "2017-04-12",
     "images": [
       "/post-images/1587534091541.jpg"
+    ],
+    "cover": "/assets/legacy/zhi-bo-dian-shang-dao-hang-xiu-tao-cover.webp",
+    "blocks": [
+      {
+        "type": "image",
+        "index": 0
+      }
     ],
     "originalText": ""
   }

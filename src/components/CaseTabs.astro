@@ -1,0 +1,49 @@
+<div data-case-tabs-root><slot /></div>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-case-tabs-root]').forEach(root => {
+    const list = root.querySelector<HTMLElement>('[data-case-tabs]');
+    if (!list) return;
+    const tabs = [...list.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-case-panel]')];
+    const activate = (id: string, focus = false) => {
+      tabs.forEach(tab => {
+        const active = tab.getAttribute('aria-controls') === id;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+        if (active && focus) tab.focus();
+      });
+      panels.forEach(panel => { panel.hidden = panel.id !== id; panel.setAttribute('role', 'tabpanel'); panel.tabIndex = 0; });
+      let visibleIndex = 0;
+      document.querySelectorAll<HTMLAnchorElement>('.case-nav a').forEach(link => {
+        const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+        const panel = heading?.closest<HTMLElement>('[data-case-panel]');
+        link.hidden = !!panel?.hidden;
+        const number = link.querySelector('span');
+        if (!link.hidden && number) number.textContent = String(++visibleIndex).padStart(2, '0');
+      });
+    };
+    const fromHash = () => {
+      let target: HTMLElement | null = null;
+      try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch { return; }
+      const panel = target?.closest<HTMLElement>('[data-case-panel]');
+      if (panel) { activate(panel.id); target?.scrollIntoView({block:'start'}); }
+    };
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        const id = tab.getAttribute('aria-controls')!;
+        activate(id);
+        history.replaceState(null, '', `#${id}`);
+      });
+      tab.addEventListener('keydown', event => {
+        const next = event.key === 'ArrowRight' ? (index + 1) % tabs.length : event.key === 'ArrowLeft' ? (index - 1 + tabs.length) % tabs.length : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : -1;
+        if (next < 0) return;
+        event.preventDefault();
+        tabs[next].click(); tabs[next].focus();
+      });
+    });
+    activate(panels[0].id);
+    list.hidden = false;
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+  });
+</script>
