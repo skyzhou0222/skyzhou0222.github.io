@@ -27,7 +27,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <body>
     <a class="skip-link" href="#main">跳到正文</a>
     <header class="site-header wrap">
-      <a href="/" class="brand" aria-label="周国翔 Sky，返回首页">周国翔 <span>/ Sky</span></a>
+      <a href="/" class="brand" aria-label="周国翔 Sky，返回首页"><img class="brand-logo" src="/assets/personal-logo.svg" width="217" height="130" alt="" /><b class="brand-name">周国翔 <span>/ Sky</span></b></a>
       <nav aria-label="主导航">
         <a href="/#work">作品</a>
         <a href="/about/" aria-current={Astro.url.pathname === '/about/' ? 'page' : undefined}>关于我</a>
