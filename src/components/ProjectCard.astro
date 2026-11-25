@@ -1,14 +1,92 @@
 ---
-import ProjectVisual from './ProjectVisual.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
 const { project } = Astro.props;
+const isForum = project.id === 'wec-bot';
 ---
+
 <article class="project-card">
-  <a href={`/work/${project.id}/`} class="project-link">
-    <ProjectVisual type={project.id} />
-    <div class="project-heading"><h3>{project.data.title}</h3><span class="project-arrow" aria-hidden="true">↗</span></div>
-    <p class="project-subtitle">{project.data.cardLead}</p>
-    <p class="project-summary">{project.data.summary}</p>
-    <div class="tags">{project.data.tags.map((tag: string) => <span>{tag}</span>)}</div>
+  <a href={`/work/${project.id}/`} class="project-link" aria-labelledby={`card-${project.id}`}>
+    <div class="project-heading">
+      <h3 id={`card-${project.id}`}>{project.data.title}</h3>
+      <span class="project-arrow" aria-hidden="true">↗</span>
+    </div>
     <p class="project-stage">{project.data.stage}</p>
+    <figure class:list={['case-cover', isForum ? 'forum-cover' : 'bug-cover']}>
+      {isForum ? (
+        <div class="forum-sheet">
+          <img src="/assets/wec/forum-question.webp" width="467" height="181" alt="论坛客户求助分析，提取故障类别及问题描述" />
+          <img class="source-link" src="/assets/wec/forum-source-link.webp" width="156" height="40" alt="原设计中的查看源帖内容入口" />
+        </div>
+      ) : (
+        <div class="evidence-flow">
+          <div class="evidence-step">
+            <b>选中 Bug 主题</b>
+            <div class="crop"><img src="/assets/wesion/bug-topic-selection.webp" width="365" height="175" alt="已选中睡眠无法唤醒主题" /></div>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">→</span>
+          <div class="evidence-step">
+            <b>查看原文依据</b>
+            <div class="crop"><img src="/assets/wesion/bug-source-excerpt.webp" width="224" height="179" alt="同一主题的关联记录，内部原文已遮盖" /></div>
+          </div>
+        </div>
+      )}
+      <figcaption>{isForum ? '论坛分析 · 原始设计稿节选' : 'Bug 分析 · 真实界面节选'} · 已脱敏</figcaption>
+    </figure>
+    <p class="project-subtitle">{project.data.cardLead}</p>
   </a>
 </article>
+
+<style>
+  .project-heading { margin: 0; }
+  .project-stage { margin: 3px 0 14px; font-size: 12px; color: #52644d; }
+  .project-subtitle { margin: 14px 0 0; font-size: 15px; line-height: 1.7; }
+  .case-cover {
+    margin: 0;
+    min-width: 0;
+    height: clamp(202px, 20vw, 276px);
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 8px;
+    padding: clamp(16px, 2vw, 26px) clamp(14px, 2.3vw, 32px) 10px;
+    border: 1px solid #dce5da;
+  }
+  .case-cover figcaption { text-align: right; font-size: 10px; line-height: 1.4; color: #536353; }
+  .forum-cover { background: #eaf0e7; }
+  .bug-cover { background: #ecf1f3; border-color: #dce4e7; }
+  .forum-sheet, .crop {
+    background: white;
+    border: 1px solid #d9e0db;
+    border-radius: 5px;
+    box-shadow: 0 4px 14px rgb(38 55 44 / 6%);
+  }
+  .forum-sheet {
+    align-self: center;
+    justify-self: center;
+    width: min(100%, 400px);
+    padding: 9px 14px;
+  }
+  .forum-sheet > img:first-child { width: 100%; }
+  .source-link { width: 30%; margin-top: 4px; }
+  .evidence-flow {
+    align-self: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: end;
+    gap: clamp(4px, .65vw, 10px);
+  }
+  .evidence-step b { display: block; font-size: 13px; color: #344c45; margin-bottom: 6px; }
+  .crop { height: clamp(92px, 9vw, 132px); display: grid; align-items: center; padding: 8px; }
+  .crop img { width: 100%; height: 100%; min-height: 0; object-fit: contain; object-position: left center; }
+  .flow-arrow { align-self: center; margin-top: 26px; font-size: 18px; color: #476353; }
+  @media (max-width: 760px) {
+    .case-cover { height: clamp(176px, 46vw, 235px); padding: 12px 14px 8px; gap: 5px; }
+    .forum-sheet { width: min(100%, 292px); padding: 5px 10px; }
+    .source-link { margin-top: 0; }
+    .project-stage { margin-bottom: 12px; }
+    .project-subtitle { margin-top: 12px; }
+  }
+</style>

@@ -8,16 +8,19 @@ const projects = (await getCollection('projects')).sort((a,b) => a.data.order - 
 ---
 <Base>
   <div class="wrap">
-    <section class="hero">
-      <p class="eyebrow">PRODUCT · DESIGN · AI <span class="eyebrow-divider">/</span> SHENZHEN</p>
+    <section class="home-hero">
       <h1>让复杂的业务，<br />成为好用的产品。</h1>
-      <p class="hero-role">{profile.title}</p>
-      <p class="hero-description">{profile.description}</p>
-      <div class="actions"><a class="button" href="#work">浏览精选案例 <span aria-hidden="true">↓</span></a><a class="text-link" href="/about/">了解我的经历 <span aria-hidden="true">↗</span></a></div>
-      <div class="hero-side" aria-hidden="true"><span>理解问题</span><span>设计体验</span><span>推动实现</span><div class="hero-rule"></div><small>从想法，到验证。</small></div>
+      <div class="home-intro">
+        <p class="hero-role">{profile.title}</p>
+        <p class="hero-description">{profile.description}</p>
+        <div class="actions">
+          <a class="button" href="#work">浏览精选案例 <span aria-hidden="true">↓</span></a>
+          <a class="text-link" href="/about/">了解我的经历 <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
     </section>
     <section id="work" aria-labelledby="work-title">
-      <div class="section-heading"><h2 id="work-title">精选项目 <span>Selected work</span></h2><span class="section-note">产品实践与设计积累 / 01—02</span></div>
+      <div class="section-heading"><h2 id="work-title">精选项目 <span>Selected work</span></h2></div>
       <div class="project-grid">{projects.map(project => <ProjectCard project={project} />)}</div>
     </section>
     <section class="design-section" aria-labelledby="design-title">
@@ -36,3 +39,31 @@ const projects = (await getCollection('projects')).sort((a,b) => a.data.order - 
     <Contact />
   </div>
 </Base>
+
+<style>
+  .home-hero {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: clamp(32px, 6vw, 96px);
+    padding-block: clamp(52px, 6vw, 88px);
+  }
+  .home-hero h1 {
+    font-size: clamp(42px, 4.2vw, 62px);
+    line-height: 1.25;
+    letter-spacing: -.045em;
+    margin: 0;
+  }
+  .home-hero .hero-role { margin-bottom: 10px; }
+  .home-hero .hero-description { text-wrap: pretty; line-height: 1.8; margin-bottom: 20px; }
+  #work .section-heading { padding-block: 24px; }
+  @media (max-width: 760px) {
+    :global(body:has(.home-hero) .site-header) { height: 64px; }
+    .home-hero { display: block; padding-block: 32px; }
+    .home-hero h1 { font-size: clamp(32px, 9.35vw, 42px); line-height: 1.22; margin-bottom: 14px; }
+    .home-hero .hero-role { font-size: 14px; margin-bottom: 8px; }
+    .home-hero .hero-description { font-size: 14px; line-height: 1.65; margin-bottom: 18px; }
+    .home-hero .button { padding: 10px 14px; min-height: 44px; }
+    #work .section-heading { padding-block: 22px; }
+  }
+</style>
