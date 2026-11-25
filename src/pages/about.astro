@@ -1,11 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
+import '../styles/reading.css';
 import Contact from '../components/Contact.astro';
 import { profile, experience, education, capabilities } from '../data/profile';
 ---
 <Base title="关于我" description="周国翔 / Sky 的职业经历：从交互与用户体验设计，到企业效率工具与 AI 应用产品。">
-  <div class="wrap">
-    <header class="about-hero"><p class="eyebrow">ABOUT / 关于我</p><h1>从理解人，<br />到理解业务。</h1><div class="about-intro"><p class="lead">我是周国翔，也可以叫我 Sky。</p><p>{profile.description}</p><p>从在线学习、智慧城市后台，到 SaaS 业务流程，再到企业 AI 应用，我一直在做的一件事，是让复杂的信息和任务变得清楚、可用。</p><span class="role-label">{profile.title}</span></div></header>
+  <div class="wrap reading-page">
+    <header class="about-hero"><p class="eyebrow">About Sky</p><h1>关于我</h1><div class="about-intro"><p class="lead">{profile.description}</p><p>从在线学习、智慧城市后台，到 SaaS 业务流程，再到企业 AI 应用，我一直在做的一件事，是让复杂的信息和任务变得清楚、可用。</p><span class="role-label">{profile.title}</span></div></header>
     <section class="about-section"><div class="section-heading"><h2>工作经历 <span>Experience</span></h2><span class="section-note">UX 是起点，产品实践在继续。</span></div>
       <div class="experience-list">{experience.map(item => <article class="experience-item"><p class="experience-date">{item.period}</p><div><h3>{item.company}</h3><p class="experience-role">{item.role}</p>{item.detail && <p class="experience-detail">{item.detail}</p>}<p class="experience-description">{item.description}</p></div></article>)}</div>
     </section>

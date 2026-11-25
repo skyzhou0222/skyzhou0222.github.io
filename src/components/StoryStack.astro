@@ -1,0 +1,120 @@
+---
+import { story } from '../data/story';
+import '../styles/story-stack.css';
+---
+<section id="about" class="story-stack" data-story-stack aria-labelledby="story-heading">
+  <div class="story-pin">
+    <div class="story-inner">
+      <header class="story-heading">
+        <p class="story-kicker">关于我 · The short story</p>
+        <div class="story-title-row">
+          <h2 id="story-heading">About me</h2>
+          <button class="story-counter" type="button" hidden aria-label="下一段职业经历">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="story-track" cx="32" cy="32" r="29" />
+              <circle class="story-progress" cx="32" cy="32" r="29" pathLength="1" />
+            </svg>
+            <span aria-hidden="true"><b data-story-number>1</b>/{story.length}</span>
+          </button>
+        </div>
+      </header>
+      {story.map(({ title, text, image, alt }, index) => (
+        <article class="story-chapter" data-story-chapter style={`--slot:${index}`}>
+          <p class="story-copy">
+            <span class="story-sr">{text || title}</span>
+            <span aria-hidden="true">{Array.from(text || title).map(char => <span data-story-letter>{char}</span>)}</span>
+          </p>
+          <figure class="story-art">
+            {image && <img src={image} alt={alt || title} loading="lazy" decoding="async" />}
+            <figcaption>{title}</figcaption>
+          </figure>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const clamp = (value: number) => Math.min(1, Math.max(0, value));
+
+  document.querySelectorAll<HTMLElement>('[data-story-stack]').forEach(section => {
+    const pin = section.querySelector<HTMLElement>('.story-pin')!;
+    const counter = section.querySelector<HTMLButtonElement>('.story-counter')!;
+    const number = section.querySelector<HTMLElement>('[data-story-number]')!;
+    const chapters = [...section.querySelectorAll<HTMLElement>('[data-story-chapter]')].map(el => ({
+      el,
+      art: el.querySelector<HTMLElement>('.story-art')!,
+      letters: [...el.querySelectorAll<HTMLElement>('[data-story-letter]')],
+      revealed: 0,
+    }));
+    const motion = matchMedia('(prefers-reduced-motion: no-preference) and (min-height: 640px)');
+    let active = -1;
+    let frame = 0;
+    let lastProgress = -1;
+
+    function render() {
+      frame = 0;
+      if (!motion.matches) return;
+      const rect = section.getBoundingClientRect();
+      const height = pin.clientHeight;
+      const progress = clamp(-rect.top / Math.max(1, rect.height - height));
+      if (progress === lastProgress) return;
+      lastProgress = progress;
+      const phase = progress * chapters.length;
+      const current = Math.min(chapters.length - 1, Math.floor(phase));
+      if (active !== current) {
+        active = current;
+        number.textContent = String(current + 1);
+        counter.setAttribute('aria-label', current === chapters.length - 1 ? '继续浏览下一节' : '下一段职业经历');
+      }
+      counter.style.setProperty('--progress', String(progress));
+
+      chapters.forEach((chapter, index) => {
+        const entry = index === 0 ? 1 : clamp((phase - index + 0.25) / 0.5);
+        chapter.art.style.setProperty('--entry-y', `${(1 - entry) ** 2 * (height + 40)}px`);
+        chapter.art.style.setProperty('--visible', entry > 0 ? '1' : '0');
+        chapter.el.toggleAttribute('data-current', index === current);
+        if (index !== current) return;
+        const reveal = clamp((phase - index) / 0.73);
+        const count = Math.round(chapter.letters.length * reveal);
+        if (count === chapter.revealed) return;
+        const first = Math.min(count, chapter.revealed);
+        const last = Math.max(count, chapter.revealed);
+        for (let i = first; i < last; i++) chapter.letters[i].toggleAttribute('data-read', i < count);
+        chapter.revealed = count;
+      });
+    }
+
+    function schedule() {
+      if (motion.matches && !frame) frame = requestAnimationFrame(render);
+    }
+
+    function syncMode() {
+      section.toggleAttribute('data-stacked', motion.matches);
+      counter.hidden = !motion.matches;
+      lastProgress = -1;
+      schedule();
+    }
+
+    function goTo(index: number) {
+      const top = section.getBoundingClientRect().top + scrollY;
+      const final = index >= chapters.length;
+      const target = final ? top + section.offsetHeight : top +
+        (Math.max(0, index) + 0.43) / chapters.length * (section.offsetHeight - pin.clientHeight);
+      window.scrollTo({ top: target, behavior: 'instant' });
+    }
+
+    counter.addEventListener('click', () => goTo(active + 1));
+    counter.addEventListener('keydown', event => {
+      const targets: Record<string, number> = { ArrowLeft: active - 1, ArrowRight: active + 1, Home: 0, End: chapters.length - 1 };
+      if (!(event.key in targets)) return;
+      event.preventDefault();
+      goTo(targets[event.key]);
+    });
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', () => { lastProgress = -1; schedule(); });
+    window.addEventListener('pageshow', schedule);
+    motion.addEventListener('change', syncMode);
+    syncMode();
+  });
+</script>

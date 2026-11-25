@@ -1,0 +1,140 @@
+<div class="page-wipe" aria-hidden="true">
+  <div class="wipe-intro"><span>LOADING</span></div>
+  {['#eadbc4','#a4b18b','#3e6e65','#d9704e','#302923'].map((color,i) =>
+    <i style={`--strip:${color};--delay:${i*55}ms`} />)}
+</div>
+<aside class="sound-choice" aria-labelledby="sound-title" data-sound-choice hidden>
+  <strong id="sound-title">网站声音</strong>
+  <p>开启环境音与交互音效，可随时在顶部切换。</p>
+  <div><button type="button" data-choice="on">开启声音</button><button type="button" data-choice="off">静音浏览</button></div>
+</aside>
+<style>
+  .page-wipe {display:none;position:fixed;inset:0;pointer-events:none;z-index:190;overflow:hidden}
+  .page-wipe i,.wipe-intro {position:absolute;inset:0}
+  .page-wipe i {background:var(--strip);transform:translateX(-101%)}
+  .wipe-intro {background:#302923;color:#f3e7d5;display:grid;place-items:center;font:900 clamp(44px,9vw,142px)/1 system-ui,sans-serif;letter-spacing:-.06em}
+  @keyframes wipe-word {from{opacity:0;transform:translateY(.2em);letter-spacing:.04em}to{opacity:1;transform:none}}
+  @keyframes wipe-screen {0%,54%{visibility:visible}55%,100%{visibility:hidden}}
+  @keyframes strip-pass {0%{transform:translateX(-101%)}42%,49%{transform:translateX(0)}100%{transform:translateX(101%)}}
+  @keyframes strip-close {from{transform:translateX(-101%)}to{transform:none}}
+  @keyframes swipe-end {to{visibility:hidden}}
+  @media (scripting:enabled) and (prefers-reduced-motion:no-preference){
+    .page-wipe {display:block;animation:swipe-end .001s 1.48s forwards}
+    .wipe-intro {animation:wipe-screen 1.2s forwards}
+    .wipe-intro span {animation:wipe-word .36s ease-out both}
+    .page-wipe i {animation:strip-pass .93s cubic-bezier(.63,.02,.27,1) calc(.24s + var(--delay)) both}
+    .page-wipe.exiting {animation:none;visibility:visible}
+    .page-wipe.exiting .wipe-intro {display:none}
+    .page-wipe.exiting i {animation:strip-close .25s cubic-bezier(.55,.05,.35,1) var(--delay) both}
+  }
+  .sound-choice[hidden]{display:none}
+  .sound-choice {position:fixed;z-index:54;right:clamp(16px,2vw,34px);bottom:clamp(16px,2vw,34px);width:min(342px,calc(100% - 32px));padding:20px 21px;background:#fffcf8f7;backdrop-filter:blur(14px);color:#302923;border:1px solid #e7dbce;box-shadow:0 7px 24px #30292312;border-radius:19px}
+  .sound-choice strong {font-size:20px;letter-spacing:-.03em}.sound-choice p{margin:6px 0 15px;font-size:13px;line-height:1.65;color:#62584e}
+  .sound-choice div {display:flex;gap:8px}.sound-choice button{cursor:pointer;flex:1;min-height:40px;border:1px solid #e2d5c7;color:#382d25;border-radius:24px;background:transparent;font-size:13px;font-weight:650}
+  .sound-choice button:first-child{background:#a84a2b;color:white;border-color:#a84a2b}.sound-choice button:hover{box-shadow:inset 0 0 0 1px currentColor}
+  @media(max-width:650px){.sound-choice{width:min(270px,calc(100% - 32px));padding:12px 14px;right:12px;bottom:max(16px,env(safe-area-inset-bottom))}.sound-choice strong{font-size:16px}.sound-choice p{font-size:12px;margin:3px 0 8px}.sound-choice button{min-height:36px}}
+  @media print {.page-wipe,.sound-choice {display:none}}
+</style>
+<script>
+  const curtain = document.querySelector<HTMLElement>('.page-wipe');
+  const reduced = matchMedia('(prefers-reduced-motion:reduce)');
+  let leaving = false;
+  document.addEventListener('click', event => {
+    if (!curtain || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey ||
+      event.shiftKey || event.altKey || reduced.matches) return;
+    const a = (event.target as Element)?.closest<HTMLAnchorElement>('a[href]');
+    if (!a || a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
+    const next = new URL(a.href);
+    if (next.origin !== location.origin || next.pathname === location.pathname ||
+      !next.pathname.endsWith('/')) return;
+    event.preventDefault();
+    if (leaving) return;
+    leaving = true;
+    curtain.classList.add('exiting');
+    window.setTimeout(() => location.assign(next.href), 465);
+  });
+  window.addEventListener('pageshow', event => {
+    if (event.persisted && curtain) {
+      curtain.classList.remove('exiting');
+      curtain.getAnimations({subtree:true}).forEach(a => a.finish());
+      leaving = false;
+    }
+  });
+
+  const toggle = document.querySelector<HTMLButtonElement>('[data-sound-toggle]');
+  const prompt = document.querySelector<HTMLElement>('[data-sound-choice]');
+  const preference = 'sky.sound';
+  let enabled = false;
+  let audio: AudioContext | undefined;
+  let master: GainNode | undefined;
+  let nextTone = 0;
+  function startAudio() {
+    if (!audio) {
+      audio = new AudioContext();
+      master = audio.createGain();
+      master.gain.value = 0;
+      master.connect(audio.destination);
+      for (const frequency of [110,164.81,220.25]) {
+        const voice = audio.createOscillator();
+        const volume = audio.createGain();
+        voice.frequency.value = frequency;
+        volume.gain.value = .008;
+        voice.connect(volume).connect(master);
+        voice.start();
+      }
+    }
+    void audio.resume().catch(() => {});
+    master?.gain.setTargetAtTime(1,audio.currentTime,.2);
+  }
+  function refreshSound(on:boolean, save:boolean) {
+    enabled = on;
+    toggle?.setAttribute('aria-pressed',String(on));
+    if (toggle) toggle.title = on ? '关闭声音' : '开启声音';
+    if (save) {
+      try { localStorage.setItem(preference,on ? 'on' : 'off'); } catch {}
+      if (prompt) prompt.hidden = true;
+    }
+    if (on && navigator.userActivation?.hasBeenActive) startAudio();
+    if (!on && audio && master) {
+      master.gain.setTargetAtTime(0,audio.currentTime,.025);
+      setTimeout(() => { if (!enabled) void audio?.suspend(); },180);
+    }
+  }
+  if (toggle && prompt && typeof AudioContext !== 'undefined') {
+    toggle.hidden = false;
+    let saved: string | null = null;
+    try { saved = localStorage.getItem(preference); } catch {}
+    refreshSound(saved === 'on',false);
+    // A first visit on a small screen keeps the sound choice in the header.
+    if (!saved && matchMedia('(min-width:901px)').matches) {
+      setTimeout(() => { if (!prompt.dataset.chosen) prompt.hidden = false; },1550);
+    }
+    function choose(on:boolean) {
+      if (prompt) prompt.dataset.chosen = 'true';
+      refreshSound(on,true);
+    }
+    toggle.addEventListener('click',() => choose(!enabled));
+    prompt.querySelectorAll<HTMLButtonElement>('[data-choice]').forEach(button =>
+      button.addEventListener('click',() => choose(button.dataset.choice === 'on')));
+    document.addEventListener('click',event => {
+      if (!enabled || !(event.target as Element)?.closest('a,button,summary')) return;
+      startAudio();
+      if (!audio || !master || audio.currentTime < nextTone) return;
+      const t = audio.currentTime;
+      nextTone = t + .16;
+      const voice = audio.createOscillator();
+      const envelope = audio.createGain();
+      voice.frequency.setValueAtTime(587.33,t);
+      voice.frequency.exponentialRampToValueAtTime(783.99,t+.09);
+      envelope.gain.setValueAtTime(.0001,t);
+      envelope.gain.exponentialRampToValueAtTime(.055,t+.008);
+      envelope.gain.exponentialRampToValueAtTime(.0001,t+.14);
+      voice.connect(envelope).connect(master);
+      voice.start(t); voice.stop(t+.15);
+    });
+    document.addEventListener('visibilitychange',() => {
+      if (document.hidden) void audio?.suspend();
+      else if (enabled && audio) void audio.resume().catch(() => {});
+    });
+  }
+</script>

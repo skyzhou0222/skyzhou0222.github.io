@@ -1,27 +1,65 @@
 ---
 import { profile } from '../data/profile';
+// Fill in a public label and URL to activate the reserved fourth row.
+const additionalContact: { label:string; value:string; href?:string } = {label:'其他渠道', value:'待补充'};
+const rows = [
+  { label:'求职邮箱', value:profile.email, href:`mailto:${profile.email}`, icon:'@' },
+  { label:'在线履历', value:'工作经历与教育背景', href:'/about/', icon:'↗' },
+  { label:'GitHub', value:'skyzhou0222', href:'https://github.com/skyzhou0222', icon:'⌘' },
+  { ...additionalContact, icon:'＋' },
+];
 ---
-<section class="contact-section" id="contact" aria-labelledby="contact-heading">
-  <div><p class="eyebrow">LET’S TALK / 保持联系</p><h2 id="contact-heading">一起，把有价值的想法<br />变成好用的产品。</h2>
-  <p class="muted">关于产品岗位、项目交流，或一个值得探索的问题。</p></div>
-  <div class="contact-actions">
-    <a class="email-link" href={`mailto:${profile.email}`}>{profile.email}<span aria-hidden="true">↗</span></a>
-    <button class="copy-email" type="button" data-email={profile.email}>复制邮箱 <span aria-hidden="true">⧉</span></button>
-    <p class="copy-status" role="status" aria-live="polite"></p>
-    <span class="location"><i aria-hidden="true"></i> 深圳 · SHENZHEN</span>
+<section class="reach-out" id="contact" aria-labelledby="contact-heading">
+  <p class="reach-kicker">联系 / Contact</p>
+  <div class="reach-grid">
+    <div class="reach-heading">
+      <h2 id="contact-heading">聊聊产品，<br />也聊聊合作。</h2>
+      <p>{profile.city} · AI 产品岗位与项目合作</p>
+    </div>
+    <div class="reach-ledger">
+      {rows.map(({label,value,href,icon},i) => {
+        const Tag = href ? 'a' : 'div';
+        return <div class="reach-row">
+          <Tag class:list={['reach-target',{'reach-reserved':!href}]} href={href}>
+            <i aria-hidden="true">{icon}</i><span><small>{label}</small><b>{value}</b></span>
+            {href && i!==0 && <em aria-hidden="true">↗</em>}
+          </Tag>
+          {i===0 && <button class="reach-copy" data-copy-email={profile.email} aria-label="复制邮箱">复制邮箱</button>}
+        </div>;
+      })}
+      <p class="reach-status" role="status"></p>
+    </div>
   </div>
 </section>
+<style>
+  .reach-out {color:#302923;margin:0;padding:clamp(64px,9vw,150px) 0 clamp(40px,6vw,92px);border-top:1px solid #e5dbcf}
+  .reach-kicker {color:#ad4c2a;text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;margin:0 0 26px}
+  .reach-grid {display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(30px,6vw,100px)}
+  .reach-heading h2 {font-size:clamp(46px,6vw,96px);letter-spacing:-.07em;font-weight:850;line-height:1.14;margin:0 0 20px}
+  .reach-heading p {color:#655c53;font-size:14px;margin:0}
+  .reach-row {display:flex;align-items:center;gap:10px;border-top:1px solid #e2d7cb}
+  .reach-target {min-width:0;display:flex;align-items:center;gap:14px;flex:1;padding:15px 0}
+  .reach-target i {display:grid;place-items:center;flex:none;width:43px;height:43px;border:1px solid #e4d6c6;border-radius:50%;font:600 21px/1 system-ui;color:#95432b;background:#fcf7f1;transition:transform .25s}
+  .reach-target small,.reach-target b {display:block}
+  .reach-target small {font-size:11px;letter-spacing:.06em;color:#776957}
+  .reach-target b {font-size:clamp(16px,1.45vw,23px);font-weight:650;letter-spacing:-.03em;overflow-wrap:anywhere}
+  .reach-target em {font:400 23px/1 system-ui;margin-inline-start:auto;transition:transform .22s}
+  a.reach-target:hover {color:var(--brand)}
+  a.reach-target:hover i {transform:rotate(-7deg)}a.reach-target:hover em {transform:translate(2px,-2px)}
+  .reach-copy {background:transparent;border:1px solid #d8c7b5;white-space:nowrap;border-radius:99px;padding:4px 12px;color:#844326;font-size:12px;cursor:pointer}
+  .reach-reserved i,.reach-reserved b {color:#796f65}
+  .reach-status {margin:0;color:var(--brand);min-height:1.5em;font-size:13px;border-top:1px solid #e2d7cb}
+  @media(max-width:740px){.reach-grid{grid-template-columns:1fr;gap:30px}.reach-kicker{margin-bottom:15px}}
+</style>
 <script>
-  document.querySelectorAll<HTMLButtonElement>('.copy-email').forEach((button) => {
-    button.addEventListener('click', async () => {
-      const status = button.parentElement?.querySelector('.copy-status');
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-email]').forEach(button => {
+    button.addEventListener('click',async () => {
+      const status = button.closest('.reach-ledger')?.querySelector('.reach-status');
+      if (!status) return;
       try {
-        if (!navigator.clipboard) throw new Error('Clipboard unavailable');
-        await navigator.clipboard.writeText(button.dataset.email || '');
-        if (status) status.textContent = '邮箱已复制';
-      } catch {
-        if (status) status.textContent = '暂时无法复制，请选中上方邮箱手动复制。';
-      }
+        await navigator.clipboard.writeText(button.dataset.copyEmail || '');
+        status.textContent = '邮箱已复制';
+      } catch { status.textContent = '可选中邮箱地址手动复制。'; }
     });
   });
 </script>

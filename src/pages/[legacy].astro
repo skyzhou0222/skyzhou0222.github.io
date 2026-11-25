@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import '../styles/reading.css';
 import entries from '../data/legacy.json';
 import images from '../data/legacy-images.json';
 const summaries = {
@@ -37,16 +38,21 @@ const index = sorted.findIndex(e=>e.slug===slug);
 const previous=sorted[index-1]; const next=sorted[index+1];
 ---
 <Base title={detail.title} description={detail.summary}>
-  <div class="wrap">
+  <div class="wrap reading-page">
     <header class="legacy-header"><a class="back-link" href="/archives/">← 返回设计作品归档</a><p class="eyebrow">{detail.label}</p><h1>{detail.title}</h1><p class="legacy-summary">{detail.summary}</p>
       <p class="source-date">历史设计作品 · 原页面发布于 {entry.published}（非项目交付日期）</p>
-      <div class="legacy-points">{detail.points.map(([title,text]) => <div><h2>{title}</h2><p>{text}</p></div>)}</div>
+      {detail.points.length > 0 && <div class="legacy-points">{detail.points.map(([title,text]) => <div><h2>{title}</h2><p>{text}</p></div>)}</div>}
     </header>
     <section class="legacy-reading" aria-label="原设计作品图集"><p class="eyebrow">ORIGINAL WORK / 设计作品</p>
-      {entry.blocks.map(block => block.type === 'text' ? <p class="legacy-source-text">{block.text}</p> : <figure class="legacy-image-group">{groups[block.index!].slices.map((slice,n) => <img src={slice.src} width={slice.width} height={slice.height} loading="lazy" decoding="async" alt={`${detail.title}，原作品第 ${block.index!+1} 张，第 ${n+1} 部分`} />)}<figcaption><span>原设计作品 · {String(block.index!+1).padStart(2,'0')}</span><a href={groups[block.index!].original} target="_blank" rel="noopener">查看原图 ↗</a></figcaption></figure>)}
+      {entry.blocks.map(block => block.type === 'text' ? <p class="legacy-source-text">{block.text}</p> : <figure class="legacy-image-group">
+        <a class="legacy-original" href={groups[block.index!].original} target="_blank" rel="noopener" tabindex="-1" aria-label={`打开${detail.title}第 ${block.index!+1} 张原图`}>
+          {groups[block.index!].slices.map((slice,n) => <img src={slice.src} width={slice.width} height={slice.height} loading="lazy" decoding="async" alt={`${detail.title}，原作品第 ${block.index!+1} 张，第 ${n+1} 部分`} />)}
+        </a>
+        <figcaption><span>原设计作品 · {String(block.index!+1).padStart(2,'0')}</span><a href={groups[block.index!].original} target="_blank" rel="noopener">查看原图 ↗</a></figcaption>
+      </figure>)}
       <p class="source-date">保留原设计资料，当前文字不新增历史业务效果或量化成果。</p>
     </section>
     <nav class="legacy-pagination" aria-label="作品翻页">{previous ? <a href={`/${previous.slug}/`}>← 上一篇：{previous.title}</a> : <a href="/archives/">← 返回全部作品</a>}{next ? <a href={`/${next.slug}/`}>下一篇：{next.title} →</a> : <a href="/archives/">返回全部作品 →</a>}</nav>
-    <a class="next-case" href="/#work"><div><p class="eyebrow">CONTINUE EXPLORING</p><h2>从设计积累，到产品实践。</h2><p>查看近期的 WeC Bot 与 WESION AI 中台案例。</p></div><span aria-hidden="true">↗</span></a>
+    <a class="next-case" href="/work/"><div><h2>作品地图</h2><p>继续查看 WeC Bot 与 WESION AI 中台案例。</p></div><span aria-hidden="true">↗</span></a>
   </div>
 </Base>

@@ -1,17 +1,22 @@
 ---
 import '../styles/global.css';
 import { profile } from '../data/profile';
+import SiteEffects from '../components/SiteEffects.astro';
 interface Props { title?: string; description?: string; }
 const { title, description = profile.description } = Astro.props;
 const pageTitle = title ? `${title} — 周国翔 / Sky` : '周国翔 / Sky — AI 产品经理与 UX 实践者';
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const sections = [
+  ['home', '首页'], ['about', '关于我'], ['facts', '经历速览'],
+  ['skills', '专业能力'], ['work', '精选作品'], ['contact', '联系'],
+];
 ---
 <!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#315342" />
+    <meta name="theme-color" content="#ffffff" />
     <meta name="description" content={description} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -26,19 +31,87 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   </head>
   <body>
     <a class="skip-link" href="#main">跳到正文</a>
-    <header class="site-header wrap">
-      <a href="/" class="brand" aria-label="周国翔 Sky，返回首页"><img class="brand-logo" src="/assets/personal-logo.svg" width="217" height="130" alt="" /><b class="brand-name">周国翔 <span>/ Sky</span></b></a>
-      <nav aria-label="主导航">
-        <a href="/#work">作品</a>
-        <a href="/about/" aria-current={Astro.url.pathname === '/about/' ? 'page' : undefined}>关于我</a>
-        <a href="/#contact">联系 <span aria-hidden="true">↗</span></a>
-      </nav>
+    <header class="masthead">
+      <div class="masthead-inner">
+        <a href="/" class="identity" aria-label="周国翔 Sky，返回首页">
+          <img src="/assets/personal-logo.svg" width="217" height="130" alt="" />
+          <strong>周国翔 <span>/ Sky</span></strong>
+        </a>
+        <details class="site-menu">
+          <summary aria-label="站点菜单"><i></i><i></i></summary>
+          <nav aria-label="主导航">
+            {sections.map(([id, label]) => <a href={`/#${id}`}>{label}</a>)}
+            <a class="map-link" href="/work/" aria-current={Astro.url.pathname === '/work/' ? 'page' : undefined}>作品地图 <span aria-hidden="true">↗</span></a>
+          </nav>
+        </details>
+        <button type="button" class="sound-toggle" data-sound-toggle aria-label="网站声音" aria-pressed="false" hidden>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z"/><g class="sound-off"><path d="m16 10 5 5m0-5-5 5"/></g><g class="sound-on"><path d="M16 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></g></svg>
+        </button>
+      </div>
     </header>
-    <main id="main"><slot /></main>
+    <main id="main" tabindex="-1"><slot /></main>
     <footer class="site-footer wrap">
       <a class="footer-name" href="/">周国翔 / Sky</a>
-      <span>持续实践，认真创造。</span>
-      <a href="/archives/">设计作品归档 <span aria-hidden="true">↗</span></a>
+      <a href="/archives/">历史作品归档</a>
     </footer>
+    <SiteEffects />
   </body>
 </html>
+<style>
+  .masthead {position:sticky;top:0;z-index:60;background:#fff;box-shadow:0 4px 22px #34241912}
+  .masthead-inner {width:min(1536px, 84%);height:var(--header-height);margin:auto;display:flex;align-items:center;gap:clamp(10px,1.8vw,28px)}
+  .identity {display:inline-flex;align-items:center;gap:11px;white-space:nowrap;line-height:1}
+  .identity img {width:44px;transition:transform .35s}
+  .identity:hover img {transform:rotate(-5deg) scale(1.06)}
+  .identity strong {font-size:clamp(17px,1.5vw,24px);font-weight:850;letter-spacing:-.055em;color:#302923}
+  .identity span {font-weight:700}
+  .site-menu {margin-inline-start:auto}
+  .site-menu nav {display:flex;align-items:center;gap:clamp(12px,1.8vw,32px)}
+  .site-menu summary {display:none}
+  .site-menu nav a {font-weight:600;color:#5d544b;font-size:13px;letter-spacing:.055em;line-height:2.6;white-space:nowrap}
+  .site-menu nav a:hover,.site-menu nav a[aria-current] {color:var(--brand)}
+  .site-menu nav a.map-link {border:1.5px solid var(--terracotta);border-radius:99px;padding-inline:18px;color:var(--ink)}
+  .map-link span {color:var(--brand)}
+  .sound-toggle {width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:white;display:grid;place-items:center;color:var(--ink);cursor:pointer}
+  .sound-toggle[hidden],.sound-toggle[aria-pressed="false"] .sound-on,.sound-toggle[aria-pressed="true"] .sound-off {display:none}
+  .site-footer {color:var(--muted);font-size:14px}
+  .site-footer a:hover {color:var(--brand)}
+  @media(min-width:901px){
+    .site-menu::details-content {content-visibility:visible;display:block}
+  }
+  @media(max-width:900px){
+    .masthead-inner {width:calc(100% - 36px);gap:12px}
+    .site-menu {order:3;margin:0}
+    .site-menu summary {cursor:pointer;list-style:none;display:grid;align-content:center;justify-content:center;gap:5px;height:42px;width:42px;border:1px solid var(--line);border-radius:50%}
+    .site-menu summary::-webkit-details-marker {display:none}
+    .site-menu summary i {display:block;width:17px;height:1.7px;background:var(--ink);transition:transform .2s}
+    .site-menu[open] summary i:first-child {transform:translateY(3.35px) rotate(45deg)}
+    .site-menu[open] summary i:last-child {transform:translateY(-3.35px) rotate(-45deg)}
+    .site-menu nav {position:absolute;top:100%;right:0;left:0;max-height:calc(100dvh - var(--header-height));overflow:auto;display:grid;gap:0;padding:12px max(24px,8vw) 24px;background:#302923;box-shadow:0 16px 24px #20171024}
+    .site-menu nav a {border-bottom:1px solid #ffffff22;color:#fff;font-size:clamp(20px,4.5vw,30px);line-height:1.55;padding-block:7px;letter-spacing:0}
+    .site-menu nav a.map-link {color:white;justify-self:start;font-size:15px;line-height:1.15;margin-top:15px;padding:10px 16px}
+    .identity {margin-right:auto}
+  }
+  @media print {.masthead {display:none}}
+</style>
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('.site-menu');
+  const desktop = matchMedia('(min-width:901px)');
+  if (menu) {
+    const syncLayout = () => { menu.open = desktop.matches; };
+    desktop.addEventListener('change', syncLayout);
+    syncLayout();
+    menu.addEventListener('click', event => {
+      if (!desktop.matches && (event.target as Element).closest('a')) menu.open = false;
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && menu.open && !desktop.matches) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!desktop.matches && !menu.contains(event.target as Node)) menu.open = false;
+    });
+  }
+</script>

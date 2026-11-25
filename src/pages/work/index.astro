@@ -1,0 +1,77 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getWorks, workGroups } from '../../data/works';
+import '../../styles/work-map.css';
+
+const works = await getWorks();
+const districts = {
+  ai: {center:[1265,600], radius:[700,390], label:[1265,540], color:'#ca8560', english:'AI PRODUCTS', positions:[[820,445],[1365,445]]},
+  systems: {center:[2370,775], radius:[674,560], label:[2175,480], color:'#808c70', english:'BUSINESS SYSTEMS', positions:[[1930,640],[2500,400],[2450,990]]},
+  interaction: {center:[1080,1450], radius:[950,537], label:[1120,1400], color:'#92a6aa',english:'INTERACTION',positions:[[770,1038],[1325,1054],[245,840],[502,1580],[1180,1590]]},
+  visual: {center:[2530,1695], radius:[690,432],label:[2460,1375],color:'#b99d99',english:'VISUAL DESIGN',positions:[[1945,1450],[2440,1630],[2935,1410]]},
+};
+const entries=workGroups.flatMap(group=>works.filter(w=>w.category===group.id).map((work,i)=>{
+  const district=districts[group.id];
+  const [x,y]=district.positions[i]??district.center;
+  return {...work,x,y};
+}));
+---
+<Base title="作品地图" description="通过作品地图探索周国翔的 AI 产品、业务系统、产品交互与视觉设计。">
+<section class="atlas" data-atlas aria-labelledby="atlas-title">
+  <h1 id="atlas-title" class="atlas-sr">作品地图</h1>
+  <div class="atlas-map" data-map hidden>
+    <div class="atlas-viewport" data-viewport tabindex="0" role="region" aria-label="作品地图，可拖动平移、滚轮或双指缩放，也可使用方向键和加减键">
+      <div class="atlas-world" data-world>
+        <svg class="atlas-land" viewBox="0 0 3400 2230" width="3400" height="2230" aria-hidden="true" focusable="false">
+          {workGroups.map(group=>{
+            const d=districts[group.id]; return <ellipse cx={d.center[0]} cy={d.center[1]} rx={d.radius[0]} ry={d.radius[1]} stroke={d.color} />;
+          })}
+        </svg>
+        {workGroups.map(group=>{
+          const d=districts[group.id]; return <button type="button" class="atlas-region" data-zone={group.id} style={`left:${d.label[0]}px;top:${d.label[1]}px;--zone:${d.color}`} aria-label={`定位到${group.title}`}><b>{d.english}</b><span>{group.title}</span></button>;
+        })}
+        {entries.map(work=><button type="button" class="atlas-card" data-pin={work.id} data-group-id={work.category} data-x={work.x} data-y={work.y} style={`left:${work.x}px;top:${work.y}px;--zone:${districts[work.category].color}`} aria-label={`查看${work.title}摘要`} aria-haspopup="dialog">
+          <span class="atlas-marker" aria-hidden="true"><i></i><strong>{work.title}</strong></span>
+          <span class="atlas-card-body">
+            <span class:list={['atlas-card-photo',{'atlas-product-photo':work.category==='ai'}]}><img src={work.cover} alt="" draggable="false"/></span>
+            <span class="atlas-card-copy"><span class="atlas-chip">{workGroups.find(g=>g.id===work.category)?.title}</span><strong>{work.title}</strong><span class="atlas-blurb">{work.summary}</span></span>
+          </span>
+        </button>)}
+      </div>
+    </div>
+    <div class="atlas-tools" aria-label="地图视图控制">
+      <button type="button" data-zoom="in" aria-label="放大地图" title="放大">+</button><button type="button" data-zoom="out" aria-label="缩小地图" title="缩小">−</button>
+      <button type="button" data-fit aria-label="查看全图" title="查看全图"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.7 6a6.1 6.1 0 1 0 .5 6m-.5-6V2.6M15.7 6h-3.5"/></svg></button>
+      <output class="atlas-sr" data-zoom-output aria-label="缩放比例"></output>
+    </div>
+  </div>
+  <div class="atlas-list" data-list>
+    <h2>作品列表</h2>
+    {workGroups.map(group=><section data-list-group={group.id}><h3>{group.title}</h3><div class="atlas-list-items">{entries.filter(w=>w.category===group.id).map(work=><a href={work.href}><img src={work.cover} alt="" width="128" height="80" loading="lazy"/><div><strong>{work.title}</strong><span>{work.summary}</span></div><b aria-hidden="true">↗</b></a>)}</div></section>)}
+  </div>
+  <div class="atlas-view" aria-label="浏览方式" data-controls hidden>
+    <button type="button" data-view="map" aria-pressed="true">地图</button><button type="button" data-view="list" aria-pressed="false">列表</button>
+  </div>
+  <div class="atlas-dock" aria-label="作品类别" data-controls hidden>
+    <button type="button" data-group="all" aria-pressed="true"><i></i>全部作品</button>
+    {workGroups.map(group=><button type="button" data-group={group.id} aria-pressed="false"><i></i>{group.title}</button>)}
+  </div>
+  <dialog class="atlas-modal" data-summary aria-labelledby="atlas-summary-title">
+    <article><button class="atlas-close" type="button" data-close aria-label="关闭作品摘要">×</button>
+      <div class="atlas-dialog-image"><img data-summary-image alt=""/></div>
+      <div class="atlas-dialog-text">
+        <span class="atlas-chip" data-category></span><h2 id="atlas-summary-title" data-title></h2>
+        <div class="atlas-problem" data-problem-block><h3>业务问题</h3><p data-problem></p></div>
+        <div><h3 data-contribution-label>我的贡献</h3><p data-description></p></div>
+        <dl><div data-role-row><dt>我的角色</dt><dd data-role></dd></div><div><dt data-stage-label>项目阶段</dt><dd data-stage></dd></div></dl>
+        <a class="atlas-detail" data-full>阅读完整作品 <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+  </dialog>
+  <script type="application/json" data-atlas-payload set:html={JSON.stringify({works:entries,groups:workGroups.map(g=>({...g,...districts[g.id]}))}).replace(/</g,'\\u003c')} />
+</section>
+</Base>
+<script>
+  import { mountAtlas } from '../../components/work-map';
+  document.querySelectorAll<HTMLElement>('[data-atlas]').forEach(mountAtlas);
+</script>

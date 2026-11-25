@@ -1,0 +1,256 @@
+/* Shared reading treatment for case studies, the archive and the profile. */
+.reading-page {
+  color: var(--ink);
+  --reading-copy: #554a42;
+}
+
+.reading-page .eyebrow,
+.reading-page .case-meta dt,
+.reading-page .archive-number,
+.reading-page .experience-date {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.reading-page .back-link,
+.reading-page .text-link,
+.reading-page .role-label,
+.reading-page .legacy-image-group a,
+.reading-page .case-evidence figcaption b {
+  color: var(--brand);
+}
+
+.reading-page .back-link {
+  padding-block: 6px;
+  margin-bottom: clamp(16px, 3vw, 40px);
+}
+
+.reading-page .case-header h1,
+.reading-page .legacy-header h1,
+.reading-page .page-heading h1,
+.reading-page .about-hero h1 {
+  font-size: clamp(36px, 5.5vw, 76px);
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.reading-page .case-subtitle,
+.reading-page .case-meta dd,
+.reading-page .about-intro .lead,
+.reading-page .experience-role,
+.reading-page .legacy-source-text {
+  color: var(--reading-copy);
+}
+
+.reading-page .case-header,
+.reading-page .legacy-header {
+  padding-block: clamp(24px, 3.5vw, 50px) clamp(32px, 4.8vw, 68px);
+}
+
+.reading-page .case-meta {
+  margin-top: 28px;
+  border-color: var(--line);
+}
+
+.reading-page .case-meta dd {
+  font-size: 14px;
+}
+
+.reading-page .prose {
+  color: var(--reading-copy);
+  line-height: 1.95;
+}
+
+.reading-page .prose h2,
+.reading-page .prose h3,
+.reading-page .prose strong,
+.reading-page .platform-cover h2,
+.reading-page .platform-cover-flow b {
+  color: var(--ink);
+}
+
+.reading-page .prose h2,
+.reading-page [data-case-panel] {
+  scroll-margin-top: 75px;
+}
+
+.reading-page .case-nav a {
+  color: var(--muted);
+  padding-block: 9px;
+}
+
+.reading-page .case-nav a span,
+.reading-page .case-nav a:hover,
+.reading-page .case-nav a:focus-visible {
+  color: var(--brand);
+}
+
+.reading-page .prose table {
+  font-size: 14px;
+}
+
+.reading-page .prose th {
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.reading-page .prose td {
+  background: transparent;
+}
+
+.reading-page .prose blockquote {
+  color: var(--muted);
+  background: var(--surface);
+  border-color: var(--brand);
+}
+
+.reading-page .case-highlights > div,
+.reading-page .case-status {
+  background: var(--surface);
+  border-color: var(--brand);
+}
+
+.reading-page .data-foundation > div:nth-child(2) {
+  background: var(--surface);
+  border-inline-start: 3px solid var(--brand);
+  border-block-color: var(--line);
+  border-inline-end-color: var(--line);
+}
+
+.reading-page .analysis-flow b,
+.reading-page .data-foundation strong,
+.reading-page .case-status strong {
+  color: var(--brand);
+}
+
+.reading-page .project-visual.large {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+.reading-page .wec-cover-main,
+.reading-page .wec-cover-front,
+.reading-page .case-evidence img {
+  border-color: var(--line);
+}
+
+.reading-page .wec-cover-label,
+.reading-page .platform-cover {
+  color: var(--brand);
+}
+
+.reading-page .platform-cover-flow > div {
+  background: var(--paper);
+  border-color: var(--line);
+}
+
+.reading-page .case-evidence,
+.reading-page .practice-grid article,
+.reading-page .contact-section {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+.reading-page .visual-caption {
+  color: var(--muted);
+  background: var(--surface);
+  padding-inline: 5px;
+}
+
+.reading-page .case-evidence figcaption,
+.reading-page .legacy-image-group figcaption,
+.reading-page .source-date {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.reading-page .module-tablist button[aria-selected="true"] {
+  color: var(--brand);
+  background: var(--surface);
+  border-bottom-color: var(--brand);
+}
+
+.reading-page .small-label,
+.reading-page .section-note,
+.reading-page .section-heading h2 span,
+.reading-page .experience-detail,
+.reading-page .archive-item p,
+.reading-page .stage-label,
+.reading-page .location {
+  color: var(--muted);
+}
+
+.reading-page .capabilities .number,
+.reading-page .archive-item > span:last-child,
+.reading-page .next-case > span {
+  color: var(--brand);
+}
+
+.reading-page .stage-label,
+.reading-page .experience-item,
+.reading-page .education-item,
+.reading-page .email-link {
+  border-color: var(--line);
+}
+
+.reading-page .location i {
+  background: var(--brand);
+}
+
+.reading-page .archive-list a:hover h2,
+.reading-page .next-case:hover h2,
+.reading-page .archive-list a:focus-visible h2 {
+  color: var(--brand);
+}
+
+.reading-page .legacy-image-group img {
+  background: var(--surface);
+}
+
+.reading-page .legacy-original {
+  display: block;
+  cursor: zoom-in;
+}
+
+@media (max-width: 760px) {
+  .reading-page .case-nav nav {
+    gap: 2px 16px;
+  }
+  .reading-page .case-nav a {
+    padding-block: 6px;
+    font-size: 13px;
+  }
+  .reading-page .case-meta dd {
+    font-size: 13px;
+  }
+  .reading-page .prose table {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 420px) {
+  .reading-page .platform-cover-flow {
+    align-items: stretch;
+    gap: 4px;
+  }
+  .reading-page .platform-cover-flow > div {
+    padding: 10px 6px;
+  }
+}
+
+@media print {
+  .reading-page {
+    color-scheme: light;
+    --ink: #171717;
+    --muted: #4b4b4b;
+    --line: #ccc;
+    --brand: #7a390f;
+    --surface: #f5f5f5;
+    --paper: #fff;
+    --reading-copy: #222;
+    color: var(--ink);
+  }
+}
+
+@media(min-width:761px){.reading-page .case-nav nav{top:calc(var(--header-height) + 16px)}}

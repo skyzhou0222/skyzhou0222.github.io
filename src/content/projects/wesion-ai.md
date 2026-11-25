@@ -1,5 +1,7 @@
 ---
 title: WESION AI 中台
+cover: /assets/wesion/bug-topics.webp
+problem: 缺陷和客户反馈分散在不同表格里，团队要弄清一个问题涉及哪些记录、结论从哪里来。
 cardLead: 我设计了 Bug 主题分析的核对流程，让业务人员点开一个 AI 归纳的主题，就能查看关联记录和原文依据。
 subtitle: 连接分散的业务数据，让 AI 进入实际工作。
 summary: 从分散的 Excel 与业务记录出发，统一数据接入、产品身份和来源追溯，逐步承载 Bug／VOC 分析、会议助手与销售分析。

@@ -2,10 +2,11 @@
 from pathlib import Path
 from html.parser import HTMLParser
 from urllib.parse import urlsplit, unquote
+import re
 import sys
 
 root = Path(sys.argv[1] if len(sys.argv) > 1 else 'dist').resolve()
-required = ['index.html', 'work/wec-bot/index.html', 'work/wesion-ai/index.html',
+required = ['index.html', 'work/index.html', 'work/wec-bot/index.html', 'work/wesion-ai/index.html',
             'about/index.html', 'archives/index.html', 'ce-shi/index.html',
             'b-duan-hou-tai-she-ji-gui-fan/index.html', '404.html']
 errors = [f'Missing visitor route: {p}' for p in required if not (root / p).is_file()]
@@ -26,10 +27,13 @@ pages = {}
 for path in root.rglob('*.html'):
     body = path.read_text()
     page = Page(); page.feed(body); pages[path] = page
-    for forbidden in ['localhost:', '127.0.0.1:', 'wedocs.sharepoint.com',
-                      'wedocs-my.sharepoint.com', '13724328632', 'thread://',
-                      'chatgpt-conversation://', '/Users/zhouguoxiang']:
+    for forbidden in ['localhost:', '127.0.0.1:', 'thread://', 'chatgpt-conversation://', '/Users/']:
         if forbidden in body: errors.append(f'{path.relative_to(root)} exposes {forbidden}')
+    for pattern, label in [
+        (r'(?<![A-Za-z0-9])1[3-9][0-9]{9}(?![A-Za-z0-9])', 'a personal mobile number'),
+        (r'https?://[a-z0-9.-]+[.]sharepoint[.]com', 'an internal document URL'),
+    ]:
+        if re.search(pattern, body, re.IGNORECASE): errors.append(f'{path.relative_to(root)} exposes {label}')
 
 refs = 0
 for path, page in pages.items():
