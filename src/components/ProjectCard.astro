@@ -6,7 +6,7 @@ const { project } = Astro.props;
   <a href={`/work/${project.id}/`} class="project-link">
     <ProjectVisual type={project.id} />
     <div class="project-heading"><h3>{project.data.title}</h3><span class="project-arrow" aria-hidden="true">↗</span></div>
-    <p class="project-subtitle">{project.data.subtitle}</p>
+    <p class="project-subtitle">{project.data.cardLead}</p>
     <p class="project-summary">{project.data.summary}</p>
     <div class="tags">{project.data.tags.map((tag: string) => <span>{tag}</span>)}</div>
     <p class="project-stage">{project.data.stage}</p>
